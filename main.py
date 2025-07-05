@@ -13,7 +13,7 @@ load_dotenv(".env")
 
 TOKEN = os.getenv("BOT_TOKEN")
 SUPPORT_GROUP_ID = int(os.getenv("CHAT_ID"))
-BOT_VER = "0.4"
+BOT_VER = "0.5"
 message_map = {}
 
 
