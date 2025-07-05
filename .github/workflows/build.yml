@@ -34,7 +34,4 @@ jobs:
         run: |
           if [[ "${RUNNER_OS}" == "Windows" ]]; then
             nuitka main.py --standalone --onefile --windows-icon=icons/graphon_support.ico --enable-plugin=pylint-warnings
-          elif [[ "${RUNNER_OS}" == "Linux" || "${RUNNER_OS}" == "macOS" ]]; then
-            nuitka main.py --standalone --onefile --enable-plugin=pylint-warnings
-          fi
-        shell: bash
+          elif [[ "${RUNNER_OS}" == "Linux" || "${RUNNER_OS}" == "]()]()
