@@ -1,2 +1,2 @@
 # GraphON-Bot
-TG Bot for GraphON
+v. 0.2
