@@ -9,11 +9,11 @@ from telegram.ext import (
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(".env")
 
 TOKEN = os.getenv("BOT_TOKEN")
 SUPPORT_GROUP_ID = int(os.getenv("CHAT_ID"))
-BOT_VER = "0.2.16" # MODIFY VERSION AFTER COMMIT!
+BOT_VER = "0.2.17" # MODIFY VERSION AFTER COMMIT!
 message_map = {}
 
 
