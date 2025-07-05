@@ -1,4 +1,4 @@
-name: Build with Nuitka
+name: Build binaries
 
 on:
   push:
@@ -33,3 +33,11 @@ jobs:
       - name: Build with Nuitka
         run: |
           nuitka main.py --standalone --onefile --enable-plugin=pylint-warnings
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-app-binary-${{ matrix.os }}
+          path: |
+            main
+            main.exe
