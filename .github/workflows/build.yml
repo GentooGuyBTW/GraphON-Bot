@@ -30,6 +30,10 @@ jobs:
         run: |
           pip install nuitka
 
-      - name: Build with Nuitka
+      - name: Add icon for Windows and build
         run: |
-          nuitka your_script.py --standalone --onefile --enable-plugin=pylint-warnings
+          if [[ $RUNNER_OS == 'Windows' ]]; then
+            nuitka main.py --standalone --onefile --windows-icon=icons/graphon_support.ico --enable-plugin=pylint-warnings
+          else
+            nuitka main.py --standalone --onefile --enable-plugin=pylint-warnings
+          fi

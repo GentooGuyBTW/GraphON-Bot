@@ -1,2 +1,2 @@
 # GraphON-Bot
-v. 0.2
+v. 0.2.1
