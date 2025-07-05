@@ -13,7 +13,7 @@ load_dotenv(".env")
 
 TOKEN = os.getenv("BOT_TOKEN")
 SUPPORT_GROUP_ID = int(os.getenv("CHAT_ID"))
-BOT_VER = "0.2.18"
+BOT_VER = "0.2.19"
 message_map = {}
 
 
@@ -51,17 +51,6 @@ async def user_message_handler(update: Update, context: ContextTypes.DEFAULT_TYP
             "✅ Ваше видео отправлено в службу поддержки. Ожидайте ответа."
         )
 
-    elif update.message.sticker:
-        sticker = update.message.sticker
-        msg = f"📨 Сообщение от @{user.username or user.first_name} (ID: {user_id}):\n\n(Стикер)"
-        support_msg = await context.bot.send_sticker(
-            chat_id=SUPPORT_GROUP_ID, sticker=sticker.file_id, caption=msg
-        )
-        message_map[support_msg.message_id] = user_id
-        await update.message.reply_text(
-            "✅ Ваш стикер отправлен в службу поддержки. Ожидайте ответа."
-        )
-
 
 async def support_reply_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.id != SUPPORT_GROUP_ID:
@@ -91,13 +80,6 @@ async def support_reply_handler(update: Update, context: ContextTypes.DEFAULT_TY
                     video=video.file_id,
                     caption=f"👨‍💼 Ответ службы поддержки: {update.message.caption}",
                 )
-            elif update.message.sticker:
-                sticker = update.message.sticker
-                await context.bot.send_sticker(
-                    chat_id=user_id,
-                    sticker=sticker.file_id,
-                    caption=f"👨‍💼 Ответ службы поддержки: {update.message.caption}",
-                )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -119,9 +101,6 @@ if __name__ == "__main__":
         MessageHandler(filters.ChatType.PRIVATE & filters.VIDEO, user_message_handler)
     )
     app.add_handler(
-        MessageHandler(filters.ChatType.PRIVATE & filters.STICKER, user_message_handler)
-    )
-    app.add_handler(
         MessageHandler(filters.ChatType.GROUPS & filters.TEXT, support_reply_handler)
     )
     app.add_handler(
@@ -129,9 +108,6 @@ if __name__ == "__main__":
     )
     app.add_handler(
         MessageHandler(filters.ChatType.GROUPS & filters.VIDEO, support_reply_handler)
-    )
-    app.add_handler(
-        MessageHandler(filters.ChatType.GROUPS & filters.STICKER, support_reply_handler)
     )
 
     print(f"GraphON Bot | v. {BOT_VER}")
