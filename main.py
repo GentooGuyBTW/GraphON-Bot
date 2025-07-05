@@ -13,6 +13,7 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 SUPPORT_GROUP_ID = os.getenv("CHAT_ID")
+BOT_VER = "0.2.5" # MODIFY VERSION AFTER COMMIT!
 message_map = {}
 
 
@@ -57,5 +58,6 @@ if __name__ == "__main__":
     app.add_handler(
         MessageHandler(filters.ChatType.GROUPS & filters.TEXT, support_reply_handler)
     )
+    print(f"GraphON Bot | v. {BOT_VER}")
     print("Бот запущен...")
     app.run_polling()
