@@ -13,7 +13,7 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 SUPPORT_GROUP_ID = os.getenv("CHAT_ID")
-BOT_VER = "0.2.8" # MODIFY VERSION AFTER COMMIT!
+BOT_VER = "0.2.9" # MODIFY VERSION AFTER COMMIT!
 message_map = {}
 
 

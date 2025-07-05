@@ -39,5 +39,5 @@ jobs:
         with:
           name: my-app-binary-${{ matrix.os }}
           path: |
-            main
+            main.bin
             main.exe
