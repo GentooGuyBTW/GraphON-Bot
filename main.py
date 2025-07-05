@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
-SUPPORT_GROUP_ID = os.getenv("CHAT_ID")
-BOT_VER = "0.2.15" # MODIFY VERSION AFTER COMMIT!
+SUPPORT_GROUP_ID = int(os.getenv("CHAT_ID"))
+BOT_VER = "0.2.16" # MODIFY VERSION AFTER COMMIT!
 message_map = {}
 
 
