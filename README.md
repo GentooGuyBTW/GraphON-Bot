@@ -1,7 +1,6 @@
 [![Build with Nuitka](https://github.com/GentooGuyBTW/GraphON-Bot/actions/workflows/build.yml/badge.svg)](https://github.com/GentooGuyBTW/GraphON-Bot/actions/workflows/build.yml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 # GraphON-Bot
-## v. 0.2.7
 ## Поддерживаемые платформы: Windows, Linux, Mac OS.
 
 # Инструкция по установке:
