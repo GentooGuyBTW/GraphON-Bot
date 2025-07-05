@@ -8,37 +8,40 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout code
+      - name: Check-out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
 
-      - name: Install requirements
+      - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Nuitka
-        run: |
-          pip install nuitka
+      - name: Build Executable
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: main.py
+          mode: app
 
-      - name: Build with Nuitka
-        run: |
-          nuitka main.py --standalone --onefile --enable-plugin=pylint-warnings
-
-      - name: Upload binary artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: graphon-bot-${{ matrix.os }}
+          name: ${{ runner.os }} Build
           path: |
             build/*.exe
             build/*.bin
             build/*.app/**/*
+            build/*.dist/**/*
+          include-hidden-files: true
