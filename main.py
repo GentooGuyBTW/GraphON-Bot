@@ -1,4 +1,4 @@
-from telegram import Update, MessageEntity
+from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -13,20 +13,54 @@ load_dotenv(".env")
 
 TOKEN = os.getenv("BOT_TOKEN")
 SUPPORT_GROUP_ID = int(os.getenv("CHAT_ID"))
-BOT_VER = "0.2.17" # MODIFY VERSION AFTER COMMIT!
+BOT_VER = "0.2.18"
 message_map = {}
 
 
 async def user_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    user_message = update.message.text
     user_id = user.id
-    msg = f"📨 Сообщение от @{user.username or user.first_name} (ID: {user_id}):\n\n{user_message}"
-    support_msg = await context.bot.send_message(chat_id=SUPPORT_GROUP_ID, text=msg)
-    message_map[support_msg.message_id] = user_id
-    await update.message.reply_text(
-        "✅ Ваше сообщение отправлено в службу поддержки. Ожидайте ответа."
-    )
+
+    if update.message.text:
+        msg = f"📨 Сообщение от @{user.username or user.first_name} (ID: {user_id}):\n\n{update.message.text}"
+        support_msg = await context.bot.send_message(chat_id=SUPPORT_GROUP_ID, text=msg)
+        message_map[support_msg.message_id] = user_id
+        await update.message.reply_text(
+            "✅ Ваше сообщение отправлено в службу поддержки. Ожидайте ответа."
+        )
+
+    elif update.message.photo:
+        photo = update.message.photo[-1]
+        msg = f"📨 Сообщение от @{user.username or user.first_name} (ID: {user_id}):\n\n(Фото)"
+        support_msg = await context.bot.send_photo(
+            chat_id=SUPPORT_GROUP_ID, photo=photo.file_id, caption=msg
+        )
+        message_map[support_msg.message_id] = user_id
+        await update.message.reply_text(
+            "✅ Ваше фото отправлено в службу поддержки. Ожидайте ответа."
+        )
+
+    elif update.message.video:
+        video = update.message.video
+        msg = f"📨 Сообщение от @{user.username or user.first_name} (ID: {user_id}):\n\n(Видео)"
+        support_msg = await context.bot.send_video(
+            chat_id=SUPPORT_GROUP_ID, video=video.file_id, caption=msg
+        )
+        message_map[support_msg.message_id] = user_id
+        await update.message.reply_text(
+            "✅ Ваше видео отправлено в службу поддержки. Ожидайте ответа."
+        )
+
+    elif update.message.sticker:
+        sticker = update.message.sticker
+        msg = f"📨 Сообщение от @{user.username or user.first_name} (ID: {user_id}):\n\n(Стикер)"
+        support_msg = await context.bot.send_sticker(
+            chat_id=SUPPORT_GROUP_ID, sticker=sticker.file_id, caption=msg
+        )
+        message_map[support_msg.message_id] = user_id
+        await update.message.reply_text(
+            "✅ Ваш стикер отправлен в службу поддержки. Ожидайте ответа."
+        )
 
 
 async def support_reply_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -37,10 +71,33 @@ async def support_reply_handler(update: Update, context: ContextTypes.DEFAULT_TY
         original_msg_id = update.message.reply_to_message.message_id
         if original_msg_id in message_map:
             user_id = message_map[original_msg_id]
-            await context.bot.send_message(
-                chat_id=user_id,
-                text=f"👨‍💼 Ответ службы поддержки:\n\n{update.message.text}",
-            )
+
+            if update.message.text:
+                await context.bot.send_message(
+                    chat_id=user_id,
+                    text=f"👨‍💼 Ответ службы поддержки:\n\n{update.message.text}",
+                )
+            elif update.message.photo:
+                photo = update.message.photo[-1]
+                await context.bot.send_photo(
+                    chat_id=user_id,
+                    photo=photo.file_id,
+                    caption=f"👨‍💼 Ответ службы поддержки: {update.message.caption}",
+                )
+            elif update.message.video:
+                video = update.message.video
+                await context.bot.send_video(
+                    chat_id=user_id,
+                    video=video.file_id,
+                    caption=f"👨‍💼 Ответ службы поддержки: {update.message.caption}",
+                )
+            elif update.message.sticker:
+                sticker = update.message.sticker
+                await context.bot.send_sticker(
+                    chat_id=user_id,
+                    sticker=sticker.file_id,
+                    caption=f"👨‍💼 Ответ службы поддержки: {update.message.caption}",
+                )
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -56,8 +113,27 @@ if __name__ == "__main__":
         MessageHandler(filters.ChatType.PRIVATE & filters.TEXT, user_message_handler)
     )
     app.add_handler(
+        MessageHandler(filters.ChatType.PRIVATE & filters.PHOTO, user_message_handler)
+    )
+    app.add_handler(
+        MessageHandler(filters.ChatType.PRIVATE & filters.VIDEO, user_message_handler)
+    )
+    app.add_handler(
+        MessageHandler(filters.ChatType.PRIVATE & filters.STICKER, user_message_handler)
+    )
+    app.add_handler(
         MessageHandler(filters.ChatType.GROUPS & filters.TEXT, support_reply_handler)
     )
+    app.add_handler(
+        MessageHandler(filters.ChatType.GROUPS & filters.PHOTO, support_reply_handler)
+    )
+    app.add_handler(
+        MessageHandler(filters.ChatType.GROUPS & filters.VIDEO, support_reply_handler)
+    )
+    app.add_handler(
+        MessageHandler(filters.ChatType.GROUPS & filters.STICKER, support_reply_handler)
+    )
+
     print(f"GraphON Bot | v. {BOT_VER}")
     print("Бот запущен...")
     app.run_polling()
