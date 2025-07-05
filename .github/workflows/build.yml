@@ -32,6 +32,4 @@ jobs:
 
       - name: Build with Nuitka
         run: |
-          if [[ "${RUNNER_OS}" == "Windows" ]]; then
-            nuitka main.py --standalone --onefile --windows-icon=icons/graphon_support.ico --enable-plugin=pylint-warnings
-          elif [[ "${RUNNER_OS}" == "Linux" || "${RUNNER_OS}" == "]()]()
+          nuitka main.py --standalone --onefile --enable-plugin=pylint-warnings
